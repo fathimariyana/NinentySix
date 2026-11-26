@@ -9,11 +9,25 @@ const services=[
  {id:'battery-electrical',t:'Battery & Electrical',d:'Battery testing, replacement and electrical fault checks.',p:'From ₹499',img:'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85',alt:'Car battery and electrical maintenance'},
  {id:'body-paint',t:'Body & Paint Repair',d:'Dent removal, scratch repair and professional repainting.',p:'From ₹2,999',img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85',alt:'Polished sports car'}
 ];
-const grid=document.getElementById('serviceGrid'),sel=document.getElementById('svcSelect');
+const grid=document.getElementById('serviceGrid');
 services.forEach((s,i)=>{
  grid.insertAdjacentHTML('beforeend',`<div class="service-slide"><a class="service-card" href="service-detail.html?service=${s.id}"><div class="service-image"><img src="${s.img}" alt="${s.alt}" loading="lazy"></div><div class="service-card-body"><span class="tag">SERVICE 0${i+1}</span><h5>${s.t}</h5><p>${s.d}</p><div class="service-card-bottom"><span class="price">${s.p}</span><span class="service-more">View details ↗</span></div></div></a></div>`);
- sel.insertAdjacentHTML('beforeend',`<option>${s.t}</option>`);
+
 });
+
+// ===== Service Image Mouse Movement Effect =====
+document.querySelectorAll('.service-image').forEach(container => {
+  const image = container.querySelector('img');
+
+  container.addEventListener('mousemove', () => {
+    image.classList.add('color-active');
+  });
+
+  container.addEventListener('mouseleave', () => {
+    image.classList.remove('color-active');
+  });
+});
+
 // Responsive services carousel controls
 let serviceIndex=0;
 function moveServices(direction){
@@ -28,8 +42,6 @@ function moveServices(direction){
 document.getElementById('servicePrev').addEventListener('click',()=>moveServices(-1));
 document.getElementById('serviceNext').addEventListener('click',()=>moveServices(1));
 window.addEventListener('resize',()=>{serviceIndex=0;grid.style.transform='translateX(0)'});
-const requestedService=new URLSearchParams(location.search).get('service');
-if(requestedService){const chosen=services.find(s=>s.id===requestedService);if(chosen){const option=[...sel.options].find(o=>o.textContent===chosen.t);if(option)option.selected=true;}}
 // loader
 window.addEventListener('load',()=>setTimeout(()=>{document.getElementById('loader').classList.add('done');document.body.classList.add('loaded');runSpeedo()},1300));
 // cursor
@@ -53,5 +65,4 @@ document.querySelectorAll('.card-s').forEach(card=>{
   card.style.transform=`perspective(800px) rotateY(${(x/r.width-.5)*14}deg) rotateX(${-(y/r.height-.5)*14}deg)`});
  card.addEventListener('mouseleave',()=>card.style.transform='');
 });
-// form
-document.getElementById('bookForm').addEventListener('submit',e=>{e.preventDefault();document.getElementById('ok').style.display='block';e.target.reset()});
+
